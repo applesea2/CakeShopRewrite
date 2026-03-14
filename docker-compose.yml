@@ -11,8 +11,3 @@ services:
 
 volumes:
   sqlvolume:
-  ```
-  
-  **.gitignore**
-  ```
-  .env
