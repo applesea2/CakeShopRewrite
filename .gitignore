@@ -1,0 +1,22 @@
+## Build output
+**/bin/
+**/obj/
+
+## .NET user/local settings
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider / JetBrains IDE
+.idea/
+
+## NuGet
+**/packages/
+
+## User-specific appsettings (contains connection strings/passwords)
+appsettings.json
+appsettings.*.json
+
+## Environment variables file (contains DB password)
+.env
