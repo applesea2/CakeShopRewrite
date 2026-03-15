@@ -20,6 +20,8 @@ public class MenuService : IMenuService
             {
                 Id = x.Id,
                 Title = x.Title,
+                Description = x.Description,
+                Category = x.Category,
                 Price = x.Price
             })
             .ToList();
@@ -34,6 +36,8 @@ public class MenuService : IMenuService
         {
             Id = item.Id,
             Title = item.Title,
+            Description = item.Description,
+            Category = item.Category,
             Price = item.Price
         };
     }

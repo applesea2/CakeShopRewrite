@@ -25,7 +25,7 @@ export default function MenuPage(){
     
     if (loading) {
         return (<div className={styles.spinnerWrap}>
-            <div className={styles.spinnner} />
+            <div className={styles.spinner} />
         </div>
         )
     }
@@ -43,35 +43,36 @@ export default function MenuPage(){
         acc[item.category].push(item);
         return acc;
     }, {});
-    
-    return (
-        <>
-            <main className={styles.page}>
-                <div className={styles.header}>
-                    <p className={styles.eyebrow}>Baked fresh to order</p>
-                    <h1 className={styles.title}>Our <em>Menu</em></h1>
-                    <p className={styles.subtitle}>Every cake handmade with love - just let us know what you like!</p>
-                </div>
-                <div className={styles.menuWrap}>
-                    {Object.entries(grouped).map(([category, categoryItems]) => (
-                            <section key={category} className={styles.category}>
-                                <h2 className={styles.categoryTitle}>{category}</h2>
-                                {categoryItems.map(item => (
-                                    <div key={item.id} className={styles.row}>
-                                        <div className={styles.rowLeft}>
-                                            <p className={styles.itemName}>{item.title}</p>
-                                            <p className={styles.itemDesc}>{item.description}</p>
-                                        </div>
-                                        <div className={styles.dots} />
-                                        <span className={styles.itemPrice}>${item.price.toFixed(2)}</span>
-                                    </div>
-                                ))}
-                            </section>
-                        )
-                    )}
+    const categories = Object.entries(grouped)
+    const mid = Math.ceil(categories.length / 2)
+    const leftCol = categories.slice(0, mid)
+    const rightCol = categories.slice(mid)
 
+    const renderCategory = ([category, categoryItems]: [string, MenuItem[]]) => (
+        <section key={category} className={styles.category}>
+            <h2 className={styles.categoryTitle}>{category}</h2>
+            {categoryItems.map(item => (
+                <div key={item.id} className={styles.row}>
+                    <div className={styles.rowLeft}>
+                        <p className={styles.itemName}>{item.title}</p>
+                        <p className={styles.itemDesc}>{item.description}</p>
+                    </div>
+                    <div className={styles.dots} />
+                    <span className={styles.itemPrice}>${item.price.toFixed(2)}</span>
                 </div>
-            </main>
-        </>
+            ))}
+        </section>
+    )
+
+    return (
+        <main className={styles.page}>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Our <em>Menu</em></h1>
+            </div>
+            <div className={styles.columns}>
+                <div>{leftCol.map(renderCategory)}</div>
+                <div>{rightCol.map(renderCategory)}</div>
+            </div>
+        </main>
     )
 }
