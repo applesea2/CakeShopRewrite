@@ -1,0 +1,140 @@
+.page {
+    background: #FAF6F0;
+    min-height: 100vh;
+    font-family: 'Lato', sans-serif;
+    padding-bottom: 5rem;
+}
+
+.header {
+    text-align: center;
+    padding: 3.5rem 2rem 2.5rem;
+    border-bottom: 1px solid #D4B896;
+    margin-bottom: 3rem;
+}
+
+.eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9C7A5E;
+    margin-bottom: 0.75rem;
+}
+
+.title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: #3D2B1F;
+    line-height: 1.15;
+}
+
+.title em {
+    font-style: italic;
+    font-weight: 400;
+    color: #9C7A5E;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #9C7A5E;
+    margin-top: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+}
+
+.menuWrap {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.category {
+    margin-bottom: 3rem;
+}
+
+.categoryTitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 400;
+    color: #9C7A5E;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #E8D9C8;
+    margin-bottom: 0.25rem;
+}
+
+.row {
+    display: flex;
+    align-items: baseline;
+    padding: 0.875rem 0;
+    border-bottom: 1px dashed #E8D9C8;
+    gap: 0.75rem;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.rowLeft {
+    flex-shrink: 0;
+    max-width: 60%;
+}
+
+.itemName {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #3D2B1F;
+    margin-bottom: 0.2rem;
+}
+
+.itemDesc {
+    font-size: 12px;
+    color: #9C7A5E;
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+.dots {
+    flex: 1;
+    border-bottom: 1px dotted #D4B896;
+    margin-bottom: 18px;
+}
+
+.itemPrice {
+    font-size: 15px;
+    color: #9C7A5E;
+    font-weight: 300;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.spinnerWrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #E8D9C8;
+    border-top-color: #9C7A5E;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error {
+    text-align: center;
+    padding: 4rem 2rem;
+    font-family: 'Lato', sans-serif;
+    color: #9C7A5E;
+    font-size: 14px;
+}

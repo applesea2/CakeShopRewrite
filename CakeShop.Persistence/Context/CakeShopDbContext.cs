@@ -25,7 +25,6 @@ public partial class CakeShopDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Item__3214EC071CB85E4C");
 
             entity.Property(e => e.Description).HasMaxLength(500);
-            entity.Property(e => e.ImagePath).HasMaxLength(50);
             entity.Property(e => e.Price).HasColumnType("money");
             entity.Property(e => e.Title).HasMaxLength(50);
             entity.Property(e => e.Category).HasMaxLength(50);

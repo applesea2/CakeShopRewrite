@@ -13,7 +13,7 @@ public static class DependencyInjection
         this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<CakeShopDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("MenuDatabase")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IMenuRepository, MenuRepository>();
         services.AddScoped<IMenuService, MenuService>();
