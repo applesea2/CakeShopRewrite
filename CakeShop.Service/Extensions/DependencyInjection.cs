@@ -1,5 +1,6 @@
 using CakeShop.Persistence.Context;
 using CakeShop.Persistence.Repositories;
+using CakeShop.Service.Email;
 using CakeShop.Service.Menu;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,9 @@ public static class DependencyInjection
 
         services.AddScoped<IMenuRepository, MenuRepository>();
         services.AddScoped<IMenuService, MenuService>();
+
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.AddScoped<IEmailService, EmailService>();
 
         return services;
     }

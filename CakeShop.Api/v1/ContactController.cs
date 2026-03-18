@@ -15,9 +15,16 @@ public class ContactController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult SendEmail([FromBody] EmailRequest request)
+    public async Task<IActionResult> SendEmail([FromBody] EmailRequest request)
     {
-        // stub until you wire up the email service
-        return StatusCode(501);
+        try
+        {
+            await _emailService.SendEmailAsync(request.Name, request.Email, request.Phone, request.Comment);
+            return Ok();
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Failed to send email. Please try again later.");
+        }
     }
 }
