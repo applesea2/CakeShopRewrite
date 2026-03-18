@@ -1,6 +1,6 @@
 import type { MenuItem } from '../types/menu';
 
-const BASE_URL = '/api/v1';
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL ?? ''}/api/v1`;
 
 export async function getMenuItems(): Promise<MenuItem[]> {
     const response = await fetch(`${BASE_URL}/menu`);
