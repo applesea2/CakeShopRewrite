@@ -12,9 +12,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCakeShopServices(builder.Configuration);
 
+var allowedOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string[]>()
+    ?? ["http://localhost:5173"];
+
 builder.Services.AddCors(options => {
-    options.AddPolicy("DevCors", policy => {
-        policy.WithOrigins("http://localhost:5173")
+    options.AddPolicy("AllowedOrigins", policy => {
+        policy.WithOrigins(allowedOrigins)
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
@@ -22,7 +25,7 @@ builder.Services.AddCors(options => {
 
 var app = builder.Build();
 
-app.UseCors("DevCors");
+app.UseCors("AllowedOrigins");
 app.MapControllers();
 
 // Configure the HTTP request pipeline.

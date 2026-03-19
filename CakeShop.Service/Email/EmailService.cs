@@ -1,6 +1,7 @@
 using System.Text;
 using MailKit.Net.Smtp;
-using MailKit;
+using MailKit.Security;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -9,10 +10,12 @@ namespace CakeShop.Service.Email;
 public class EmailService : IEmailService
 {
     private readonly EmailSettings _emailSettings;
+    private readonly ILogger<EmailService> _logger;
 
-    public EmailService(IOptions<EmailSettings> emailSettings)
+    public EmailService(IOptions<EmailSettings> emailSettings, ILogger<EmailService> logger)
     {
         _emailSettings = emailSettings.Value;
+        _logger = logger;
     }
     public async Task SendEmailAsync(string? name, string? email, string? phone, string? comment)
     {
@@ -33,8 +36,16 @@ public class EmailService : IEmailService
         {
             Text = body.ToString()
         };
+        var secureSocketOptions = _emailSettings.UseSSL
+            ? SecureSocketOptions.SslOnConnect
+            : _emailSettings.UseStartTls
+                ? SecureSocketOptions.StartTls
+                : SecureSocketOptions.Auto;
+
         using var client = new SmtpClient();
-        await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, _emailSettings.UseSSL);
+        _logger.LogInformation("Connecting to {SmtpServer}:{Port} with {SecurityOption}",
+            _emailSettings.SmtpServer, _emailSettings.Port, secureSocketOptions);
+        await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, secureSocketOptions);
         await client.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
         await client.SendAsync(message);
         await client.DisconnectAsync(true);
