@@ -3,6 +3,7 @@ import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
 import MenuPage from './pages/MenuPage';
 import ContactPage from './pages/ContactPage';
+import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/menu" element={<MenuPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/about" element={<AboutPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>

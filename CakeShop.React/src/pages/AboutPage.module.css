@@ -1,0 +1,235 @@
+.page {
+    background: #FAF6F0;
+    min-height: 100vh;
+    font-family: 'Lato', sans-serif;
+    padding-bottom: 5rem;
+}
+
+/* ── Hero Banner ── */
+.hero {
+    position: relative;
+    width: 100%;
+    min-height: 360px;
+    background-image: url('../assets/cake.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.heroOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.heroContent {
+    position: relative;
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #E8D9C8;
+    margin-bottom: 0.75rem;
+}
+
+.heroTitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.15;
+    margin: 0;
+}
+
+.heroTitle em {
+    font-style: italic;
+    font-weight: 400;
+    color: #E8D9C8;
+}
+
+.heroSub {
+    font-size: 15px;
+    color: #E8D9C8;
+    margin-top: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ── Story Section ── */
+.story {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.sectionTag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9C7A5E;
+    margin-bottom: 0.75rem;
+}
+
+.sectionTitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: #3D2B1F;
+    line-height: 1.2;
+    margin: 0 0 1.5rem;
+}
+
+.sectionTitle em {
+    font-style: italic;
+    font-weight: 400;
+    color: #9C7A5E;
+}
+
+.storyText {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #5C4A3A;
+    font-weight: 300;
+    max-width: 620px;
+}
+
+.storyText + .storyText {
+    margin-top: 1.25rem;
+}
+
+/* ── Values Grid ── */
+.values {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+}
+
+.valuesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.valueCard {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 2.25rem 2rem;
+    box-shadow: 0 2px 16px rgba(61, 43, 31, 0.07);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.valueCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 24px rgba(61, 43, 31, 0.12);
+}
+
+.valueIcon {
+    font-size: 36px;
+    margin-bottom: 1rem;
+}
+
+.valueTitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #3D2B1F;
+    margin: 0 0 0.75rem;
+}
+
+.valueDesc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #9C7A5E;
+    font-weight: 300;
+}
+
+/* ── Promise / CTA Section ── */
+.promise {
+    background: #3D2B1F;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.promiseTitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #FAF6F0;
+    margin: 0 0 1rem;
+}
+
+.promiseTitle em {
+    font-style: italic;
+    font-weight: 400;
+    color: #D4B896;
+}
+
+.promiseText {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #D4B896;
+    font-weight: 300;
+    max-width: 540px;
+    margin: 0 auto 2rem;
+}
+
+.ctaBtn {
+    display: inline-block;
+    padding: 0.85rem 2.5rem;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #3D2B1F;
+    background: #FAF6F0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+}
+
+.ctaBtn:hover {
+    background: #f0e6d6;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .heroTitle {
+        font-size: 32px;
+    }
+    .hero {
+        min-height: 280px;
+    }
+    .sectionTitle {
+        font-size: 28px;
+    }
+    .valuesGrid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+    .story {
+        padding: 3rem 1.5rem;
+    }
+    .values {
+        padding: 0 1.5rem 3rem;
+    }
+    .promiseTitle {
+        font-size: 26px;
+    }
+}
