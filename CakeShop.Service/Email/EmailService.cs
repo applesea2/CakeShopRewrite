@@ -23,15 +23,20 @@ public class EmailService : IEmailService
         message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
         message.To.Add(new MailboxAddress("Jesse Stroster", _emailSettings.SenderEmail));
         message.ReplyTo.Add(new MailboxAddress(name, email));
-        message.Subject = "CakeShop Order/Questions";
-        StringBuilder body = new StringBuilder(name ?? "No name provided.");
-        body.Append(' ');
-        body.Append("contacted you regarding a cake. Call back at");
-        body.Append(' ');
-        body.Append(phone ?? "No phone provided");
-        body.AppendLine(".");
+        message.Subject = "CakeShop Contact Us Inquiry";
+
+        StringBuilder body = new StringBuilder();
+        body.AppendLine("New Contact Us Inquiry");
+        body.AppendLine("======================");
         body.AppendLine();
-        body.Append(comment ?? "No comment provided");
+        body.AppendLine($"Name: {name ?? "Not provided"}");
+        body.AppendLine($"Email: {email ?? "Not provided"}");
+        body.AppendLine($"Phone: {phone ?? "Not provided"}");
+        body.AppendLine();
+        body.AppendLine("Comment");
+        body.AppendLine("-------");
+        body.AppendLine(comment ?? "No comment provided");
+
         message.Body = new TextPart("plain")
         {
             Text = body.ToString()
