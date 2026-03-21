@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styles from './HeroSection.module.css'
 
 export default function HeroSection() {
@@ -6,7 +7,7 @@ export default function HeroSection() {
             <div className={styles.overlay}>
                 <p className={styles.tag}>Cake Store</p>
                 <h1 className={styles.heading}>Handmade Cakes<br />Baked with Love</h1>
-                <button className={styles.orderBtn}>Order Now</button>
+                <Link to="/order" className={styles.orderBtn}>Order Now</Link>
             </div>
         </section>
     )
