@@ -138,3 +138,13 @@
     border: 1px solid #E8C4C4;
     border-radius: 6px;
 }
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 32px;
+    }
+    .card {
+        margin: 0 1rem;
+        padding: 1.5rem;
+    }
+}

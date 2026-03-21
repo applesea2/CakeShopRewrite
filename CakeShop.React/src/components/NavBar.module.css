@@ -3,7 +3,6 @@
     border-bottom: 1px solid #D4B896;
     padding: 0 2rem;
 }
-
 .inner {
     max-width: 1100px;
     margin: 0 auto;
@@ -12,29 +11,18 @@
     justify-content: space-between;
     height: 72px;
 }
-
 .brand {
     display: flex;
     flex-direction: column;
     line-height: 1.1;
     text-decoration: none;
 }
-
 .brandName {
     font-family: 'PlayFair Display';
     font-size: 30px;
     font-weight: 600;
     color: #3D2B1F;
 }
-
-.brandSub {
-    font-size: 26px;
-    font-weight: 300;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #9C7A5E;
-}
-
 .brandSub {
     font-size: 14px;
     font-weight: 300;
@@ -42,7 +30,6 @@
     text-transform: uppercase;
     color: #9C7A5E;
 }
-
 .links {
     display: flex;
     align-items: center;
@@ -51,7 +38,6 @@
     margin: 0;
     padding: 0;
 }
-
 .links a {
     font-family: 'Pinyon Script', cursive;
     font-size: 32px;
@@ -61,7 +47,6 @@
     position: relative;
     padding-bottom: 3px;
 }
-
 .links a::after {
     content: '';
     position: absolute;
@@ -72,20 +57,16 @@
     background: #C8956A;
     transition: width 0.25s ease;
 }
-
 .links a:hover::after,
 .links a.active::after {
     width: 100%;
 }
-
 .links a:hover {
     color: #3D2B1F;
 }
-
 .active {
     color: #3D2B1F !important;
 }
-
 .orderBtn {
     font-family: 'Lato', sans-serif !important;
     background: #3D2B1F !important;
@@ -95,18 +76,72 @@
     font-size: 24px !important;
     letter-spacing: 0.1em;
 }
-
 .orderBtn:hover {
     background: #5C3D2B !important;
 }
-
 .orderBtn::after {
     display: none !important;
 }
 
+/* Burger button — hidden on desktop */
+.burger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    flex-direction: column;
+    gap: 5px;
+}
+.burger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #3D2B1F;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.burgerOpen span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.burgerOpen span:nth-child(2) {
+    opacity: 0;
+}
+.burgerOpen span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
 
-
-
-
-
-
+/* Mobile styles */
+@media (max-width: 768px) {
+    .nav {
+        padding: 0 1rem;
+    }
+    .burger {
+        display: flex;
+    }
+    .links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: #FAF6F0;
+        border-bottom: 1px solid #D4B896;
+        padding: 1.5rem 0;
+        gap: 1.25rem;
+        z-index: 100;
+    }
+    .linksOpen {
+        display: flex;
+    }
+    .inner {
+        position: relative;
+    }
+    .links a {
+        font-size: 24px;
+    }
+    .orderBtn {
+        font-size: 18px !important;
+    }
+}

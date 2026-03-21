@@ -55,3 +55,17 @@
 .orderBtn:hover {
     background: #f0e6d6;
 }
+
+@media (max-width: 768px) {
+    .heading {
+        font-size: 28px;
+        padding: 0 1rem;
+    }
+    .tag {
+        font-size: 14px;
+    }
+    .orderBtn {
+        padding: 12px 28px;
+        font-size: 14px;
+    }
+}

@@ -140,3 +140,14 @@
     color: #9C7A5E;
     font-size: 14px;
 }
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 32px;
+    }
+    .columns {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+}
