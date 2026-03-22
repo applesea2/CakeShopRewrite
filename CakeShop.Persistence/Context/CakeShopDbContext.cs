@@ -17,6 +17,7 @@ public partial class CakeShopDbContext : DbContext
     }
 
     public virtual DbSet<Item> Items { get; set; }
+    public virtual DbSet<Order> Orders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +29,20 @@ public partial class CakeShopDbContext : DbContext
             entity.Property(e => e.Price).HasColumnType("money");
             entity.Property(e => e.Title).HasMaxLength(50);
             entity.Property(e => e.Category).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Email).HasMaxLength(200);
+            entity.Property(e => e.Phone).HasMaxLength(20);
+            entity.Property(e => e.CakeType).HasMaxLength(50);
+            entity.Property(e => e.CakeSize).HasMaxLength(50);
+            entity.Property(e => e.CakeFlavor).HasMaxLength(50);
+            entity.Property(e => e.FrostingFlavor).HasMaxLength(50);
+            entity.Property(e => e.DateNeeded).HasMaxLength(50);
+            entity.Property(e => e.SpecialInstructions).HasMaxLength(500);
         });
 
         OnModelCreatingPartial(modelBuilder);

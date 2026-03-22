@@ -4,10 +4,8 @@
         {
             "name": "C#: CakeShop.Api Debug",
             "type": "coreclr",
-            "request": "launch",
-            "program": "dotnet",
-            "args": ["run", "--launch-profile", "https"],
-            "cwd": "${workspaceFolder}/CakeShop.Api"
+            "request": "attach",
+            "processName": "CakeShop.Api"
         },
         {
             "name": "React: CakeShop Client",
