@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: CakeShop.Api Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": ["run", "--launch-profile", "https"],
+            "cwd": "${workspaceFolder}/CakeShop.Api"
+        },
+        {
+            "name": "React: CakeShop Client",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
+            "cwd": "${workspaceFolder}/CakeShop.React",
+            "serverReadyAction": {
+                "pattern": "Local:.*http?://localhost:[0-9]+",
+                "uriFormat": "http://localhost:3000",
+                "action": "openExternally"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Full Stack: API + React",
+            "configurations": ["C#: CakeShop.Api Debug", "React: CakeShop Client"]
+        }
+    ]
+}

@@ -1,6 +1,7 @@
 ## Build output
-**/bin/
-**/obj/
+**/bin**/
+**/obj**/
+CakeShop.Persistence/Migrations/
 
 ## .NET user/local settings
 *.user
