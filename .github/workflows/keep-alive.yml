@@ -8,4 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping site
-        run: curl -s cakeshop-app-g7anhrf8hwcwfeep.canadaeast-01.azurewebsites.netapi/v1/menu > /dev/null
+        run: curl -s https://cakeshop-app-g7anhrf8hwcwfeep.canadaeast-01.azurewebsites.net/api/v1/menu > /dev/null
