@@ -150,7 +150,7 @@ export default function OrderPage() {
         try {
             await sendOrderRequest({
                 name, email, phone, cakeType, cakeSize,
-                cakeFlavor: selectedCake?.title || '',
+                cake: selectedCake?.title || '',
                 frostingFlavor, dateNeeded, specialInstructions,
             });
             setStatus('success');
@@ -252,9 +252,9 @@ export default function OrderPage() {
                     </div>
                     <div className={styles.fieldRow}>
                         <div className={styles.fieldGroup}>
-                            <label htmlFor="cakeFlavor" className={styles.label}>Cake</label>
+                            <label htmlFor="cake" className={styles.label}>Cake</label>
                             <select
-                                id="cakeFlavor"
+                                id="cake"
                                 className={`${styles.select} ${errors.selectedCakeId ? styles.inputError : ''}`}
                                 value={selectedCakeId || ''}
                                 onChange={handleCakeSelectionChange}
