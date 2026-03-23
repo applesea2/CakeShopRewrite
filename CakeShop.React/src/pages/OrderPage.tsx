@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { sendOrderRequest } from '../api/orderApi';
 import styles from './OrderPage.module.css';
+import type { MenuItem } from '../types/menu';
+import { getMenuItems } from '../api/menuApi';
 
 function formatPhoneNumber(value: string): string {
     const digits = value.replace(/\D/g, '').slice(0, 10);
@@ -18,42 +20,78 @@ function isValidPhone(phone: string): boolean {
     return /^\(\d{3}\) \d{3}-\d{4}$/.test(phone);
 }
 
-const cakeTypes = ['Birthday Cake', 'Wedding Cake', 'Cupcakes', 'Sheet Cake', 'Custom Cake', 'Other'];
-const cakeSizes = ['6"  (serves 8–10)', '8"  (serves 12–16)', '10" (serves 20–28)', '12" (serves 30–40)', 'Tiered / Custom'];
-const cakeFlavors = ['Vanilla', 'Chocolate', 'Red Velvet', 'Lemon', 'Strawberry', 'Marble', 'Funfetti', 'Other'];
-const frostingFlavors = ['Buttercream', 'Cream Cheese', 'Chocolate Ganache', 'Fondant', 'Whipped Cream', 'Other'];
+const cakeSizes = [
+    '7" Round',
+    '9" Round',
+    '9x13" Sheet'
+];
+
+const frostingOptions = [
+    'Vanilla Buttercream',
+    'Chocolate Buttercream',
+    'Cream Cheese',
+    'Swiss Meringue',
+    'Chocolate Ganache'
+];
 
 export default function OrderPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [cakeType, setCakeType] = useState('');
     const [cakeSize, setCakeSize] = useState('');
-    const [cakeFlavor, setCakeFlavor] = useState('');
+    const [selectedCakeId, setSelectedCakeId] = useState<number | null>(null);
     const [frostingFlavor, setFrostingFlavor] = useState('');
     const [dateNeeded, setDateNeeded] = useState('');
     const [specialInstructions, setSpecialInstructions] = useState('');
     const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
+    const categories = useMemo(
+        () => [...new Set(menuItems.map((item) => item.category))],
+        [menuItems]
+    );
+
+    const availableCakes = useMemo(
+        () => menuItems.filter(item => item.category === cakeType),
+        [menuItems, cakeType]
+    );
+
+    const selectedCake = useMemo(
+        () => menuItems.find(item => item.id === selectedCakeId) || null,
+        [menuItems, selectedCakeId]
+    );
+
+    const showFrosting = useMemo(() => cakeType === 'Celebration Cakes', [cakeType]);
+
+    const resetForm = () => {
+        setName('');
+        setEmail('');
+        setPhone('');
+        setCakeType('');
+        setCakeSize('');
+        setSelectedCakeId(null);
+        setFrostingFlavor('');
+        setDateNeeded('');
+        setSpecialInstructions('');
+        setErrors({});
+    };
+
+    useEffect(() => {
+        getMenuItems().then(setMenuItems);
+    }, []);
+
     const validate = (): Record<string, string> => {
         const newErrors: Record<string, string> = {};
         if (!name.trim()) newErrors.name = 'Name is required.';
-        if (!email.trim()) {
-            newErrors.email = 'Email is required.';
-        } else if (!isValidEmail(email)) {
-            newErrors.email = 'Please enter a valid email address.';
-        }
-        if (!phone.trim()) {
-            newErrors.phone = 'Phone number is required.';
-        } else if (!isValidPhone(phone)) {
-            newErrors.phone = 'Please enter a valid phone number.';
-        }
+        if (!email.trim() || !isValidEmail(email)) newErrors.email = 'Valid email is required.';
+        if (!phone.trim() || !isValidPhone(phone)) newErrors.phone = 'Valid phone number is required.';
         if (!cakeType) newErrors.cakeType = 'Please select a cake type.';
-        if (!cakeSize) newErrors.cakeSize = 'Please select a cake size.';
-        if (!cakeFlavor) newErrors.cakeFlavor = 'Please select a cake flavor.';
-        if (!frostingFlavor) newErrors.frostingFlavor = 'Please select a frosting flavor.';
-        if (!dateNeeded) newErrors.dateNeeded = 'Please select a date needed.';
+        if (!selectedCakeId) newErrors.selectedCakeId = 'Please select a cake.';
+        if (!cakeSize) newErrors.cakeSize = 'Please select a size.';
+        if (showFrosting && !frostingFlavor) newErrors.frostingFlavor = 'Please select a frosting.';
+        if (!dateNeeded) newErrors.dateNeeded = 'Please select a date.';
         return newErrors;
     };
 
@@ -85,29 +123,38 @@ export default function OrderPage() {
         if (isValidPhone(formatted)) clearError('phone');
     };
 
+    const handleCakeTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value;
+        setCakeType(value);
+        setSelectedCakeId(null);
+        setFrostingFlavor('');
+        clearError('cakeType');
+    };
+
+    const handleCakeSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = parseInt(e.target.value);
+        setSelectedCakeId(value);
+        clearError('selectedCakeId');
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const validationErrors = validate();
-        setErrors(validationErrors);
-        if (Object.keys(validationErrors).length > 0) return;
+        const formErrors = validate();
+        if (Object.keys(formErrors).length) {
+            setErrors(formErrors);
+            return;
+        }
 
         setStatus('sending');
+
         try {
             await sendOrderRequest({
                 name, email, phone, cakeType, cakeSize,
-                cakeFlavor, frostingFlavor, dateNeeded, specialInstructions,
+                cakeFlavor: selectedCake?.title || '',
+                frostingFlavor, dateNeeded, specialInstructions,
             });
             setStatus('success');
-            setName('');
-            setEmail('');
-            setPhone('');
-            setCakeType('');
-            setCakeSize('');
-            setCakeFlavor('');
-            setFrostingFlavor('');
-            setDateNeeded('');
-            setSpecialInstructions('');
-            setErrors({});
+            resetForm();
         } catch {
             setStatus('error');
         }
@@ -182,10 +229,10 @@ export default function OrderPage() {
                                 id="cakeType"
                                 className={`${styles.select} ${errors.cakeType ? styles.inputError : ''}`}
                                 value={cakeType}
-                                onChange={e => { setCakeType(e.target.value); clearError('cakeType'); }}
+                                onChange={handleCakeTypeChange}
                             >
                                 <option value="">Select type…</option>
-                                {cakeTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                                {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                             </select>
                             {errors.cakeType && <p className={styles.fieldError}>{errors.cakeType}</p>}
                         </div>
@@ -205,31 +252,38 @@ export default function OrderPage() {
                     </div>
                     <div className={styles.fieldRow}>
                         <div className={styles.fieldGroup}>
-                            <label htmlFor="cakeFlavor" className={styles.label}>Cake Flavor</label>
+                            <label htmlFor="cakeFlavor" className={styles.label}>Cake</label>
                             <select
                                 id="cakeFlavor"
-                                className={`${styles.select} ${errors.cakeFlavor ? styles.inputError : ''}`}
-                                value={cakeFlavor}
-                                onChange={e => { setCakeFlavor(e.target.value); clearError('cakeFlavor'); }}
+                                className={`${styles.select} ${errors.selectedCakeId ? styles.inputError : ''}`}
+                                value={selectedCakeId || ''}
+                                onChange={handleCakeSelectionChange}
+                                disabled={!cakeType}
                             >
-                                <option value="">Select flavor…</option>
-                                {cakeFlavors.map(f => <option key={f} value={f}>{f}</option>)}
+                                <option value="">Select cake…</option>
+                                {availableCakes.map(cake => (
+                                    <option key={cake.id} value={cake.id}>
+                                        {cake.title}
+                                    </option>
+                                ))}
                             </select>
-                            {errors.cakeFlavor && <p className={styles.fieldError}>{errors.cakeFlavor}</p>}
+                            {errors.selectedCakeId && <p className={styles.fieldError}>{errors.selectedCakeId}</p>}
                         </div>
-                        <div className={styles.fieldGroup}>
-                            <label htmlFor="frostingFlavor" className={styles.label}>Frosting</label>
-                            <select
-                                id="frostingFlavor"
-                                className={`${styles.select} ${errors.frostingFlavor ? styles.inputError : ''}`}
-                                value={frostingFlavor}
-                                onChange={e => { setFrostingFlavor(e.target.value); clearError('frostingFlavor'); }}
-                            >
-                                <option value="">Select frosting…</option>
-                                {frostingFlavors.map(f => <option key={f} value={f}>{f}</option>)}
-                            </select>
-                            {errors.frostingFlavor && <p className={styles.fieldError}>{errors.frostingFlavor}</p>}
-                        </div>
+                        {showFrosting && (
+                            <div className={styles.fieldGroup}>
+                                <label htmlFor="frostingFlavor" className={styles.label}>Frosting</label>
+                                <select
+                                    id="frostingFlavor"
+                                    className={`${styles.select} ${errors.frostingFlavor ? styles.inputError : ''}`}
+                                    value={frostingFlavor}
+                                    onChange={e => { setFrostingFlavor(e.target.value); clearError('frostingFlavor'); }}
+                                >
+                                    <option value="">Select frosting…</option>
+                                    {frostingOptions.map(f => <option key={f} value={f}>{f}</option>)}
+                                </select>
+                                {errors.frostingFlavor && <p className={styles.fieldError}>{errors.frostingFlavor}</p>}
+                            </div>
+                        )}
                     </div>
                     <div className={styles.fieldGroup}>
                         <label htmlFor="dateNeeded" className={styles.label}>Date Needed</label>
