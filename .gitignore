@@ -15,10 +15,5 @@ CakeShop.Persistence/Migrations/
 ## NuGet
 **/packages/
 
-## User-specific appsettings (contains connection strings/passwords)
-appsettings.json
-appsettings.*.json
-
 ## Environment variables file (contains DB password)
 .env
-.vscode

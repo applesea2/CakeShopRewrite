@@ -1,0 +1,112 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run: API (Background)",
+            "type": "shell",
+            "command": "dotnet run --launch-profile https",
+            "dependsOn": "Docker: Start SQL Server",
+            "options": {
+                "cwd": "${workspaceFolder}/CakeShop.Api"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "^.*$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Building...",
+                    "endsPattern": "Now listening on: https://localhost:7227"
+                }
+            }
+        },
+        {
+            "label": "Run: React (Background)",
+            "type": "shell",
+            "command": "npm run dev",
+            "options": {
+                "cwd": "${workspaceFolder}/CakeShop.React"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "^.*$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "VITE",
+                    "endsPattern": "Local:.*http://localhost:3000"
+                }
+            }
+        },
+        {
+            "label": "Run Full Stack",
+            "dependsOn": [
+                "Run: API (Background)",
+                "Run: React (Background)"
+            ],
+            "group": "none"
+        },
+        {
+            "label": "EF Add Migration",
+            "type": "shell",
+            "command": "dotnet ef migrations add ${input:migrationName} --project CakeShop.Persistence --startup-project CakeShop.Api",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "Docker: Start SQL Server",
+            "type": "shell",
+            "command": "docker compose up -d db",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "EF Update Database",
+            "type": "shell",
+            "command": "dotnet ef database update --project CakeShop.Persistence --startup-project CakeShop.Api",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "EF Update Database (Azure)",
+            "type": "shell",
+            "command": "dotnet ef database update --project CakeShop.Persistence --startup-project CakeShop.Api --connection \"Server=tcp:cakeshop-sql.database.windows.net,1433;Initial Catalog=CakeShop;Persist Security Info=False;User ID=CloudSA910ca456;Password=@ChocolateIsTheBest169;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;\"",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "EF List Migrations",
+            "type": "shell",
+            "command": "dotnet ef migrations list --project CakeShop.Persistence --startup-project CakeShop.Api",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "EF Remove Last Migration",
+            "type": "shell",
+            "command": "dotnet ef migrations remove --project CakeShop.Persistence --startup-project CakeShop.Api",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "migrationName",
+            "type": "promptString",
+            "description": "Enter the name of the migration"
+        }
+    ]
+}
