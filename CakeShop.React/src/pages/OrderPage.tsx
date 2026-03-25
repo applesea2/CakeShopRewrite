@@ -2,7 +2,9 @@ import { useEffect, useState, useMemo } from 'react';
 import { sendOrderRequest } from '../api/orderApi';
 import styles from './OrderPage.module.css';
 import type { MenuItem } from '../types/menu';
+import type { CakeSize, FrostingOption } from '../types/options';
 import { getMenuItems } from '../api/menuApi';
+import { getCakeSizes, getFrostingOptions } from '../api/optionsApi';
 
 function formatPhoneNumber(value: string): string {
     const digits = value.replace(/\D/g, '').slice(0, 10);
@@ -20,25 +22,13 @@ function isValidPhone(phone: string): boolean {
     return /^\(\d{3}\) \d{3}-\d{4}$/.test(phone);
 }
 
-const cakeSizes = [
-    '7" Round',
-    '9" Round',
-    '9x13" Sheet'
-];
-
-const frostingOptions = [
-    'Vanilla Buttercream',
-    'Chocolate Buttercream',
-    'Cream Cheese',
-    'Swiss Meringue',
-    'Chocolate Ganache'
-];
-
 export default function OrderPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+    const [cakeSizes, setCakeSizes] = useState<CakeSize[]>([]);
+    const [frostingOptions, setFrostingOptions] = useState<FrostingOption[]>([]);
     const [cakeType, setCakeType] = useState('');
     const [cakeSize, setCakeSize] = useState('');
     const [selectedCakeId, setSelectedCakeId] = useState<number | null>(null);
@@ -80,6 +70,8 @@ export default function OrderPage() {
 
     useEffect(() => {
         getMenuItems().then(setMenuItems);
+        getCakeSizes().then(setCakeSizes);
+        getFrostingOptions().then(setFrostingOptions);
     }, []);
 
     const validate = (): Record<string, string> => {
@@ -105,25 +97,25 @@ export default function OrderPage() {
         }
     };
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setName(value);
         if (value.trim()) clearError('name');
     };
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setEmail(value);
         if (isValidEmail(value)) clearError('email');
     };
 
-    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const formatted = formatPhoneNumber(e.target.value);
         setPhone(formatted);
         if (isValidPhone(formatted)) clearError('phone');
     };
 
-    const handleCakeTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onCakeTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         setCakeType(value);
         setSelectedCakeId(null);
@@ -131,13 +123,13 @@ export default function OrderPage() {
         clearError('cakeType');
     };
 
-    const handleCakeSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onCakeSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = parseInt(e.target.value);
         setSelectedCakeId(value);
         clearError('selectedCakeId');
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const formErrors = validate();
         if (Object.keys(formErrors).length) {
@@ -150,7 +142,7 @@ export default function OrderPage() {
         try {
             await sendOrderRequest({
                 name, email, phone, cakeType, cakeSize,
-                cake: selectedCake?.title || '',
+                cakeFlavor: selectedCake?.title || '',
                 frostingFlavor, dateNeeded, specialInstructions,
             });
             setStatus('success');
@@ -178,7 +170,7 @@ export default function OrderPage() {
                 {status === 'error' && (
                     <p className={styles.error}>Failed to submit order. Please try again.</p>
                 )}
-                <form onSubmit={handleSubmit} noValidate>
+                <form onSubmit={onSubmit} noValidate>
                     <h2 className={styles.sectionTitle}>Your Information</h2>
                     <div className={styles.fieldGroup}>
                         <label htmlFor="name" className={styles.label}>Name</label>
@@ -187,7 +179,7 @@ export default function OrderPage() {
                             type="text"
                             className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
                             value={name}
-                            onChange={handleNameChange}
+                            onChange={onNameChange}
                             placeholder="Your full name"
                         />
                         {errors.name && <p className={styles.fieldError}>{errors.name}</p>}
@@ -200,7 +192,7 @@ export default function OrderPage() {
                                 type="email"
                                 className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
                                 value={email}
-                                onChange={handleEmailChange}
+                                onChange={onEmailChange}
                                 placeholder="you@example.com"
                             />
                             {errors.email && <p className={styles.fieldError}>{errors.email}</p>}
@@ -212,7 +204,7 @@ export default function OrderPage() {
                                 type="tel"
                                 className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
                                 value={phone}
-                                onChange={handlePhoneChange}
+                                onChange={onPhoneChange}
                                 placeholder="(555) 123-4567"
                             />
                             {errors.phone && <p className={styles.fieldError}>{errors.phone}</p>}
@@ -229,7 +221,7 @@ export default function OrderPage() {
                                 id="cakeType"
                                 className={`${styles.select} ${errors.cakeType ? styles.inputError : ''}`}
                                 value={cakeType}
-                                onChange={handleCakeTypeChange}
+                                onChange={onCakeTypeChange}
                             >
                                 <option value="">Select type…</option>
                                 {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -245,7 +237,7 @@ export default function OrderPage() {
                                 onChange={e => { setCakeSize(e.target.value); clearError('cakeSize'); }}
                             >
                                 <option value="">Select size…</option>
-                                {cakeSizes.map(s => <option key={s} value={s}>{s}</option>)}
+                                {cakeSizes.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
                             </select>
                             {errors.cakeSize && <p className={styles.fieldError}>{errors.cakeSize}</p>}
                         </div>
@@ -257,7 +249,7 @@ export default function OrderPage() {
                                 id="cake"
                                 className={`${styles.select} ${errors.selectedCakeId ? styles.inputError : ''}`}
                                 value={selectedCakeId || ''}
-                                onChange={handleCakeSelectionChange}
+                                onChange={onCakeSelectionChange}
                                 disabled={!cakeType}
                             >
                                 <option value="">Select cake…</option>
@@ -279,7 +271,7 @@ export default function OrderPage() {
                                     onChange={e => { setFrostingFlavor(e.target.value); clearError('frostingFlavor'); }}
                                 >
                                     <option value="">Select frosting…</option>
-                                    {frostingOptions.map(f => <option key={f} value={f}>{f}</option>)}
+                                    {frostingOptions.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
                                 </select>
                                 {errors.frostingFlavor && <p className={styles.fieldError}>{errors.frostingFlavor}</p>}
                             </div>

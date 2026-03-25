@@ -1,5 +1,6 @@
 ﻿using CakeShop.Persistence.Context;
 using CakeShop.Persistence.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CakeShop.Persistence.Repositories;
 
@@ -11,13 +12,17 @@ public class MenuRepository : IMenuRepository
     {
         _db = db;
     }
-    public List<Item?> GetListOfItems()
+    public List<Item> GetListOfItems()
     {
-        return _db.Items.ToList();
+        return _db.Items
+            .Include(x => x.ItemType)
+            .ToList();
     }
 
     public Item? GetItemById(int id)
     {
-        return _db.Items.Find(id);
+        return _db.Items
+            .Include(x => x.ItemType)
+            .FirstOrDefault(x => x.Id == id);
     }
 }

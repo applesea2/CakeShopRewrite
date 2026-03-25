@@ -13,7 +13,7 @@ public class MenuService : IMenuService
         _menuRepository = menuRepository;
     }
 
-    public List<MenuItemDto?> GetMenuItems()
+    public List<MenuItemDto> GetMenuItems()
     {
         return _menuRepository.GetListOfItems()
             .Select(x => new MenuItemDto
@@ -21,7 +21,8 @@ public class MenuService : IMenuService
                 Id = x.Id,
                 Title = x.Title,
                 Description = x.Description,
-                Category = x.Category,
+                ItemTypeId = x.ItemTypeId,
+                Category = x.ItemType.Name,
                 Price = x.Price
             })
             .ToList();
@@ -37,7 +38,8 @@ public class MenuService : IMenuService
             Id = item.Id,
             Title = item.Title,
             Description = item.Description,
-            Category = item.Category,
+            ItemTypeId = item.ItemTypeId,
+            Category = item.ItemType.Name,
             Price = item.Price
         };
     }

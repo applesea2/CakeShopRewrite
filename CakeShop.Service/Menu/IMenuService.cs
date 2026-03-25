@@ -5,6 +5,6 @@ namespace CakeShop.Service.Menu;
 
 public interface IMenuService
 {
-    List<MenuItemDto?> GetMenuItems();
+    List<MenuItemDto> GetMenuItems();
     MenuItemDto? GetMenuItemById(int id);
 }

@@ -2,6 +2,7 @@ using CakeShop.Persistence.Context;
 using CakeShop.Persistence.Repositories;
 using CakeShop.Service.Email;
 using CakeShop.Service.Menu;
+using CakeShop.Service.Options;
 using CakeShop.Service.Order;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,9 @@ public static class DependencyInjection
 
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IOrderService, OrderService>();
+
+        services.AddScoped<IOptionsRepository, OptionsRepository>();
+        services.AddScoped<IOptionsService, OptionsService>();
 
         return services;
     }

@@ -53,31 +53,31 @@ export default function ContactPage() {
         }
     };
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setName(value);
         if (value.trim()) clearError('name');
     };
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setEmail(value);
         if (isValidEmail(value)) clearError('email');
     };
 
-    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const formatted = formatPhoneNumber(e.target.value);
         setPhone(formatted);
         if (isValidPhone(formatted)) clearError('phone');
     };
 
-    const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const onCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value;
         setComment(value);
         if (value.trim()) clearError('comment');
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const validationErrors = validate();
         setErrors(validationErrors);
@@ -113,7 +113,7 @@ export default function ContactPage() {
                 {status === 'error' && (
                     <p className={styles.error}>Failed to send message. Please try again.</p>
                 )}
-                <form onSubmit={handleSubmit} noValidate>
+                <form onSubmit={onSubmit} noValidate>
                     <div className={styles.fieldGroup}>
                         <label htmlFor="name" className={styles.label}>Name</label>
                         <input
@@ -121,7 +121,7 @@ export default function ContactPage() {
                             type="text"
                             className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
                             value={name}
-                            onChange={handleNameChange}
+                            onChange={onNameChange}
                             placeholder="Your full name"
                         />
                         {errors.name && <p className={styles.fieldError}>{errors.name}</p>}
@@ -133,7 +133,7 @@ export default function ContactPage() {
                             type="email"
                             className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
                             value={email}
-                            onChange={handleEmailChange}
+                            onChange={onEmailChange}
                             placeholder="you@example.com"
                         />
                         {errors.email && <p className={styles.fieldError}>{errors.email}</p>}
@@ -145,7 +145,7 @@ export default function ContactPage() {
                             type="tel"
                             className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
                             value={phone}
-                            onChange={handlePhoneChange}
+                            onChange={onPhoneChange}
                             placeholder="(555) 123-4567"
                         />
                         {errors.phone && <p className={styles.fieldError}>{errors.phone}</p>}
@@ -156,7 +156,7 @@ export default function ContactPage() {
                             id="comment"
                             className={`${styles.textarea} ${errors.comment ? styles.inputError : ''}`}
                             value={comment}
-                            onChange={handleCommentChange}
+                            onChange={onCommentChange}
                             placeholder="Tell us about your dream cake or ask us anything…"
                         />
                         {errors.comment && <p className={styles.fieldError}>{errors.comment}</p>}
