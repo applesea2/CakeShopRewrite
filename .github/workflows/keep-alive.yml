@@ -1,11 +1,19 @@
 name: Keep DB Alive
 on:
   schedule:
-    - cron: '*/20 * * * *'  # every 20 minutes
-  workflow_dispatch: 
+    - cron: '*/20 * * * *'
+  workflow_dispatch:
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
       - name: Ping site
-        run: curl -s https://cakeshop-app-g7anhrf8hwcwfeep.canadaeast-01.azurewebsites.net/api/v1/menu > /dev/null
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            --max-time 90 \
+            --retry 3 \
+            --retry-delay 15 \
+            --retry-http-errors \
+            https://cakeshop-app-g7anhrf8hwcwfeep.canadaeast-01.azurewebsites.net/api/v1/menu)
+          echo "Response code: $response"
