@@ -5,4 +5,7 @@ public interface IEmailService
     public Task SendOrderEmailAsync(string? name, string? email, string? phone, string? cakeType,
         string? cakeSize, string? cakeFlavor, string? frostingFlavor, string? dateNeeded,
         string? specialInstructions);
+    public Task SendOrderConfirmationEmailAsync(string? name, string? email, string? phone, string? cakeType,
+        string? cakeSize, string? cakeFlavor, string? frostingFlavor, string? dateNeeded,
+        string? specialInstructions);
 }

@@ -44,6 +44,11 @@ public class OrdersController : ControllerBase
                 request.CakeType, request.CakeSize, request.CakeFlavor,
                 request.FrostingFlavor, request.DateNeeded, request.SpecialInstructions);
 
+            await _emailService.SendOrderConfirmationEmailAsync(
+                request.Name, request.Email, request.Phone,
+                request.CakeType, request.CakeSize, request.CakeFlavor,
+                request.FrostingFlavor, request.DateNeeded, request.SpecialInstructions);
+
             return Ok();
         }
         catch (Exception ex)
