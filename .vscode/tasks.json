@@ -48,7 +48,8 @@
                 "Run: API (Background)",
                 "Run: React (Background)"
             ],
-            "group": "none"
+            "group": "none",
+            "problemMatcher": []
         },
         {
             "label": "EF Add Migration",

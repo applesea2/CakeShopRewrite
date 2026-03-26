@@ -15,4 +15,16 @@
       <ProjectReference Include="..\CakeShop.Persistence\CakeShop.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="EmailTemplates\OrderConfirmation.html" />
+      <EmbeddedResource Include="EmailTemplates\OrderNotification.html" />
+      <EmbeddedResource Include="EmailTemplates\Contact.html" />
+    </ItemGroup>
+
+    <Target Name="RenderEmailTemplates" BeforeTargets="Build">
+      <Exec Command="npm run render-emails"
+            WorkingDirectory="$(MSBuildThisFileDirectory)..\CakeShop.React"
+            ConsoleToMSBuild="true" />
+    </Target>
+
 </Project>
