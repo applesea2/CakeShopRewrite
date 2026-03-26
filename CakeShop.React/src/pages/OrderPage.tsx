@@ -43,11 +43,6 @@ export default function OrderPage() {
         [menuItems]
     );
 
-    const availableCakes = useMemo(
-        () => menuItems.filter(item => item.category === cakeType),
-        [menuItems, cakeType]
-    );
-
     const selectedCake = useMemo(
         () => menuItems.find(item => item.id === selectedCakeId) || null,
         [menuItems, selectedCakeId]
@@ -79,7 +74,6 @@ export default function OrderPage() {
         if (!name.trim()) newErrors.name = 'Name is required.';
         if (!email.trim() || !isValidEmail(email)) newErrors.email = 'Valid email is required.';
         if (!phone.trim() || !isValidPhone(phone)) newErrors.phone = 'Valid phone number is required.';
-        if (!cakeType) newErrors.cakeType = 'Please select a cake type.';
         if (!selectedCakeId) newErrors.selectedCakeId = 'Please select a cake.';
         if (!cakeSize) newErrors.cakeSize = 'Please select a size.';
         if (showFrosting && !frostingFlavor) newErrors.frostingFlavor = 'Please select a frosting.';
@@ -115,18 +109,13 @@ export default function OrderPage() {
         if (isValidPhone(formatted)) clearError('phone');
     };
 
-    const onCakeTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        setCakeType(value);
-        setSelectedCakeId(null);
-        setFrostingFlavor('');
-        clearError('cakeType');
-    };
-
     const onCakeSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = parseInt(e.target.value);
         setSelectedCakeId(value);
+        const item = menuItems.find(m => m.id === value);
+        if (item) setCakeType(item.category);
         clearError('selectedCakeId');
+        clearError('cakeType');
     };
 
     const onSubmit = async (e: React.FormEvent) => {
@@ -214,53 +203,38 @@ export default function OrderPage() {
                     <hr className={styles.divider} />
                     <h2 className={styles.sectionTitle}>Cake Details</h2>
 
+                    <div className={styles.fieldGroup}>
+                        <label htmlFor="cake" className={styles.label}>Cake</label>
+                        <select
+                            id="cake"
+                            className={`${styles.select} ${errors.selectedCakeId ? styles.inputError : ''}`}
+                            value={selectedCakeId || ''}
+                            onChange={onCakeSelectionChange}
+                        >
+                            <option value="">Select a cake…</option>
+                            {categories.map(cat => (
+                                <optgroup key={cat} label={cat}>
+                                    {menuItems.filter(item => item.category === cat).map(cake => (
+                                        <option key={cake.id} value={cake.id}>{cake.title}</option>
+                                    ))}
+                                </optgroup>
+                            ))}
+                        </select>
+                        {errors.selectedCakeId && <p className={styles.fieldError}>{errors.selectedCakeId}</p>}
+                    </div>
                     <div className={styles.fieldRow}>
-                        <div className={styles.fieldGroup}>
-                            <label htmlFor="cakeType" className={styles.label}>Cake Type</label>
-                            <select
-                                id="cakeType"
-                                className={`${styles.select} ${errors.cakeType ? styles.inputError : ''}`}
-                                value={cakeType}
-                                onChange={onCakeTypeChange}
-                            >
-                                <option value="">Select type…</option>
-                                {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                            </select>
-                            {errors.cakeType && <p className={styles.fieldError}>{errors.cakeType}</p>}
-                        </div>
-                        <div className={styles.fieldGroup}>
+                            <div className={styles.fieldGroup}>
                             <label htmlFor="cakeSize" className={styles.label}>Cake Size</label>
                             <select
                                 id="cakeSize"
                                 className={`${styles.select} ${errors.cakeSize ? styles.inputError : ''}`}
                                 value={cakeSize}
-                                onChange={e => { setCakeSize(e.target.value); clearError('cakeSize'); }}
-                            >
+                                onChange={e => { setCakeSize(e.target.value); clearError('cakeSize'); }}>
                                 <option value="">Select size…</option>
                                 {cakeSizes.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
                             </select>
                             {errors.cakeSize && <p className={styles.fieldError}>{errors.cakeSize}</p>}
-                        </div>
-                    </div>
-                    <div className={styles.fieldRow}>
-                        <div className={styles.fieldGroup}>
-                            <label htmlFor="cake" className={styles.label}>Cake</label>
-                            <select
-                                id="cake"
-                                className={`${styles.select} ${errors.selectedCakeId ? styles.inputError : ''}`}
-                                value={selectedCakeId || ''}
-                                onChange={onCakeSelectionChange}
-                                disabled={!cakeType}
-                            >
-                                <option value="">Select cake…</option>
-                                {availableCakes.map(cake => (
-                                    <option key={cake.id} value={cake.id}>
-                                        {cake.title}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.selectedCakeId && <p className={styles.fieldError}>{errors.selectedCakeId}</p>}
-                        </div>
+                        </div>                       
                         {showFrosting && (
                             <div className={styles.fieldGroup}>
                                 <label htmlFor="frostingFlavor" className={styles.label}>Frosting</label>
