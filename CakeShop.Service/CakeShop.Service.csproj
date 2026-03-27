@@ -21,7 +21,7 @@
       <EmbeddedResource Include="EmailTemplates\Contact.html" />
     </ItemGroup>
 
-    <Target Name="RenderEmailTemplates" BeforeTargets="Build">
+    <Target Name="RenderEmailTemplates" BeforeTargets="Build" Condition="'$(CI)' != 'true'">
       <Exec Command="npm run render-emails"
             WorkingDirectory="$(MSBuildThisFileDirectory)..\CakeShop.React"
             ConsoleToMSBuild="true" />
