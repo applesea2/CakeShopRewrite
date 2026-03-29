@@ -25,6 +25,13 @@ builder.Services.AddCors(options => {
 
 var app = builder.Build();
 
+// After app.Build()
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CakeShopDbContext>();
+    await db.Database.ExecuteSqlRawAsync("SELECT 1");
+}
+
 app.UseCors("AllowedOrigins");
 app.MapControllers();
 
