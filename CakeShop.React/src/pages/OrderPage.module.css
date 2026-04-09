@@ -160,6 +160,25 @@
     border: 1px solid #E8C4C4;
     border-radius: 6px;
 }
+.cakePreview {
+    margin-top: 0.6rem;
+    padding: 0.75rem 1rem;
+    background: #F5EFE6;
+    border-left: 3px solid #9C7A5E;
+    border-radius: 0 6px 6px 0;
+}
+.cakeDescription {
+    font-size: 13px;
+    color: #6B5040;
+    margin: 0 0 0.35rem;
+    line-height: 1.5;
+}
+.cakePrice {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9C7A5E;
+    margin: 0;
+}
 @media (max-width: 768px) {
     .title {
         font-size: 32px;

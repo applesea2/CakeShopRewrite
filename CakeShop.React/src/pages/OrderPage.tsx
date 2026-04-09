@@ -37,6 +37,8 @@ export default function OrderPage() {
     const [specialInstructions, setSpecialInstructions] = useState('');
     const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
 
     const categories = useMemo(
         () => [...new Set(menuItems.map((item) => item.category))],
@@ -64,9 +66,14 @@ export default function OrderPage() {
     };
 
     useEffect(() => {
-        getMenuItems().then(setMenuItems);
-        getCakeSizes().then(setCakeSizes);
-        getFrostingOptions().then(setFrostingOptions);
+        Promise.all([getMenuItems(), getCakeSizes(), getFrostingOptions()])
+            .then(([items, sizes, frostings]) => {
+                setMenuItems(items);
+                setCakeSizes(sizes);
+                setFrostingOptions(frostings);
+            })
+            .catch(() => setLoadError(true))
+            .finally(() => setLoading(false));
     }, []);
 
     const validate = (): Record<string, string> => {
@@ -78,6 +85,7 @@ export default function OrderPage() {
         if (!cakeSize) newErrors.cakeSize = 'Please select a size.';
         if (showFrosting && !frostingFlavor) newErrors.frostingFlavor = 'Please select a frosting.';
         if (!dateNeeded) newErrors.dateNeeded = 'Please select a date.';
+        else if (dateNeeded < minDate) newErrors.dateNeeded = 'Please select a date at least 3 days from today.';
         return newErrors;
     };
 
@@ -141,7 +149,11 @@ export default function OrderPage() {
         }
     };
 
-    const today = new Date().toISOString().split('T')[0];
+    const minDate = useMemo(() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 3);
+        return d.toISOString().split('T')[0];
+    }, []);
 
     return (
         <div className={styles.page}>
@@ -153,6 +165,9 @@ export default function OrderPage() {
                 </p>
             </div>
             <div className={styles.card}>
+                {loadError && (
+                    <p className={styles.error}>Unable to load menu options. Please refresh the page.</p>
+                )}
                 {status === 'success' && (
                     <p className={styles.success}>Order request submitted! We'll reach out to confirm details and pricing.</p>
                 )}
@@ -210,8 +225,9 @@ export default function OrderPage() {
                             className={`${styles.select} ${errors.selectedCakeId ? styles.inputError : ''}`}
                             value={selectedCakeId || ''}
                             onChange={onCakeSelectionChange}
+                            disabled={loading}
                         >
-                            <option value="">Select a cake…</option>
+                            <option value="">{loading ? 'Loading…' : 'Select a cake…'}</option>
                             {categories.map(cat => (
                                 <optgroup key={cat} label={cat}>
                                     {menuItems.filter(item => item.category === cat).map(cake => (
@@ -221,36 +237,42 @@ export default function OrderPage() {
                             ))}
                         </select>
                         {errors.selectedCakeId && <p className={styles.fieldError}>{errors.selectedCakeId}</p>}
-                    </div>
-                    <div className={styles.fieldRow}>
-                            <div className={styles.fieldGroup}>
-                            <label htmlFor="cakeSize" className={styles.label}>Cake Size</label>
-                            <select
-                                id="cakeSize"
-                                className={`${styles.select} ${errors.cakeSize ? styles.inputError : ''}`}
-                                value={cakeSize}
-                                onChange={e => { setCakeSize(e.target.value); clearError('cakeSize'); }}>
-                                <option value="">Select size…</option>
-                                {cakeSizes.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
-                            </select>
-                            {errors.cakeSize && <p className={styles.fieldError}>{errors.cakeSize}</p>}
-                        </div>                       
-                        {showFrosting && (
-                            <div className={styles.fieldGroup}>
-                                <label htmlFor="frostingFlavor" className={styles.label}>Frosting</label>
-                                <select
-                                    id="frostingFlavor"
-                                    className={`${styles.select} ${errors.frostingFlavor ? styles.inputError : ''}`}
-                                    value={frostingFlavor}
-                                    onChange={e => { setFrostingFlavor(e.target.value); clearError('frostingFlavor'); }}
-                                >
-                                    <option value="">Select frosting…</option>
-                                    {frostingOptions.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
-                                </select>
-                                {errors.frostingFlavor && <p className={styles.fieldError}>{errors.frostingFlavor}</p>}
+                        {selectedCake && (
+                            <div className={styles.cakePreview}>
+                                <p className={styles.cakeDescription}>{selectedCake.description}</p>
+                                <p className={styles.cakePrice}>Starting at ${selectedCake.price.toFixed(2)}</p>
                             </div>
                         )}
                     </div>
+                    <div className={styles.fieldGroup}>
+                        <label htmlFor="cakeSize" className={styles.label}>Cake Size</label>
+                        <select
+                            id="cakeSize"
+                            className={`${styles.select} ${errors.cakeSize ? styles.inputError : ''}`}
+                            value={cakeSize}
+                            onChange={e => { setCakeSize(e.target.value); clearError('cakeSize'); }}
+                            disabled={loading}>
+                            <option value="">{loading ? 'Loading…' : 'Select size…'}</option>
+                            {cakeSizes.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+                        </select>
+                        {errors.cakeSize && <p className={styles.fieldError}>{errors.cakeSize}</p>}
+                    </div>
+                    {showFrosting && (
+                        <div className={styles.fieldGroup}>
+                            <label htmlFor="frostingFlavor" className={styles.label}>Frosting</label>
+                            <select
+                                id="frostingFlavor"
+                                className={`${styles.select} ${errors.frostingFlavor ? styles.inputError : ''}`}
+                                value={frostingFlavor}
+                                onChange={e => { setFrostingFlavor(e.target.value); clearError('frostingFlavor'); }}
+                                disabled={loading}
+                            >
+                                <option value="">{loading ? 'Loading…' : 'Select frosting…'}</option>
+                                {frostingOptions.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
+                            </select>
+                            {errors.frostingFlavor && <p className={styles.fieldError}>{errors.frostingFlavor}</p>}
+                        </div>
+                    )}
                     <div className={styles.fieldGroup}>
                         <label htmlFor="dateNeeded" className={styles.label}>Date Needed</label>
                         <input
@@ -259,7 +281,7 @@ export default function OrderPage() {
                             className={`${styles.input} ${errors.dateNeeded ? styles.inputError : ''}`}
                             value={dateNeeded}
                             onChange={e => { setDateNeeded(e.target.value); clearError('dateNeeded'); }}
-                            min={today}
+                            min={minDate}
                         />
                         {errors.dateNeeded && <p className={styles.fieldError}>{errors.dateNeeded}</p>}
                     </div>
