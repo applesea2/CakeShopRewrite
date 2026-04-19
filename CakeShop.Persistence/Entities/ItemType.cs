@@ -6,6 +6,8 @@ public class ItemType
     public string Name { get; set; } = string.Empty;
     public int DisplayOrder { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsQuantityBased { get; set; } = false;
 
     public ICollection<Item> Items { get; set; } = new List<Item>();
+    public ICollection<CakeSize> CakeSizes { get; set; } = new List<CakeSize>();
 }

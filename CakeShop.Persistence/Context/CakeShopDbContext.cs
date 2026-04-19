@@ -46,10 +46,10 @@ public partial class CakeShopDbContext : DbContext
             entity.Property(e => e.DisplayOrder);
 
             entity.HasData(
-                new ItemType { Id = 1, Name = "Celebration Cakes", DisplayOrder = 1, IsActive = true },
-                new ItemType { Id = 2, Name = "Cupcakes", DisplayOrder = 2, IsActive = true },
-                new ItemType { Id = 3, Name = "Cheesecakes", DisplayOrder = 3, IsActive = true },
-                new ItemType { Id = 4, Name = "Pastries", DisplayOrder = 4, IsActive = true }
+                new ItemType { Id = 1, Name = "Celebration Cakes", DisplayOrder = 1, IsActive = true, IsQuantityBased = false },
+                new ItemType { Id = 2, Name = "Cupcakes", DisplayOrder = 2, IsActive = true, IsQuantityBased = true },
+                new ItemType { Id = 3, Name = "Cheesecakes", DisplayOrder = 3, IsActive = true, IsQuantityBased = false },
+                new ItemType { Id = 4, Name = "Pastries", DisplayOrder = 4, IsActive = true, IsQuantityBased = false }
             );
         });
 
@@ -61,7 +61,9 @@ public partial class CakeShopDbContext : DbContext
             entity.HasData(
                 new CakeSize { Id = 1, Name = "7\" Round", DisplayOrder = 1, IsActive = true },
                 new CakeSize { Id = 2, Name = "9\" Round", DisplayOrder = 2, IsActive = true },
-                new CakeSize { Id = 3, Name = "9x13\" Sheet", DisplayOrder = 3, IsActive = true }
+                new CakeSize { Id = 3, Name = "9x13\" Sheet", DisplayOrder = 3, IsActive = true },
+                new CakeSize { Id = 4, Name = "Half Dozen (6)", DisplayOrder = 1, IsActive = true },
+                new CakeSize { Id = 5, Name = "Dozen (12)", DisplayOrder = 2, IsActive = true }
             );
         });
 
@@ -90,8 +92,27 @@ public partial class CakeShopDbContext : DbContext
             entity.Property(e => e.CakeFlavor).HasMaxLength(50);
             entity.Property(e => e.FrostingFlavor).HasMaxLength(50);
             entity.Property(e => e.DateNeeded).HasMaxLength(50);
+            entity.Property(e => e.Quantity).HasMaxLength(50);
             entity.Property(e => e.SpecialInstructions).HasMaxLength(500);
         });
+
+        modelBuilder.Entity<CakeSize>()
+            .HasMany(s => s.ItemTypes)
+            .WithMany(t => t.CakeSizes)
+            .UsingEntity<Dictionary<string, object>>(
+                "CakeSizeItemType",
+                j => j.HasOne<ItemType>().WithMany().HasForeignKey("ItemTypeId"),
+                j => j.HasOne<CakeSize>().WithMany().HasForeignKey("CakeSizeId"),
+                j => j.HasData(
+                    new { CakeSizeId = 1, ItemTypeId = 1 },  // 7" Round → Celebration Cakes
+                    new { CakeSizeId = 1, ItemTypeId = 3 },  // 7" Round → Cheesecakes
+                    new { CakeSizeId = 2, ItemTypeId = 1 },  // 9" Round → Celebration Cakes
+                    new { CakeSizeId = 2, ItemTypeId = 3 },  // 9" Round → Cheesecakes
+                    new { CakeSizeId = 3, ItemTypeId = 1 },  // 9x13" Sheet → Celebration Cakes
+                    new { CakeSizeId = 4, ItemTypeId = 2 },  // Half Dozen → Cupcakes
+                    new { CakeSizeId = 5, ItemTypeId = 2 }   // Dozen → Cupcakes
+                )
+            );
 
         OnModelCreatingPartial(modelBuilder);
     }

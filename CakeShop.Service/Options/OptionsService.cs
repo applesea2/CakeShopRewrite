@@ -14,7 +14,12 @@ public class OptionsService : IOptionsService
     public List<CakeSizeDto> GetCakeSizes()
     {
         return _optionsRepository.GetCakeSizes()
-            .Select(x => new CakeSizeDto { Id = x.Id, Name = x.Name })
+            .Select(x => new CakeSizeDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                ItemTypeIds = x.ItemTypes.Select(t => t.Id).ToList()
+            })
             .ToList();
     }
 

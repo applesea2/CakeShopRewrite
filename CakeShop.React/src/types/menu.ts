@@ -5,4 +5,5 @@ export interface MenuItem {
   itemTypeId: number;
   category: string;
   price: number;
+  isQuantityBased: boolean;
 }

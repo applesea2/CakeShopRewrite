@@ -21,6 +21,7 @@ public class OrderService : IOrderService
             Phone = order.Phone,
             CakeType = order.CakeType,
             CakeSize = order.CakeSize,
+            Quantity = order.Quantity,
             CakeFlavor = order.CakeFlavor,
             FrostingFlavor = order.FrostingFlavor,
             DateNeeded = order.DateNeeded,

@@ -1,5 +1,6 @@
 using CakeShop.Persistence.Context;
 using CakeShop.Persistence.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CakeShop.Persistence.Repositories;
 
@@ -16,6 +17,7 @@ public class OptionsRepository : IOptionsRepository
     {
         return _db.CakeSizes
             .Where(x => x.IsActive)
+            .Include(x => x.ItemTypes)
             .OrderBy(x => x.DisplayOrder)
             .ToList();
     }

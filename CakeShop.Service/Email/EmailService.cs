@@ -76,9 +76,10 @@ public class EmailService : IEmailService
     }
 
     public async Task SendOrderEmailAsync(string? name, string? email, string? phone, string? cakeType,
-        string? cakeSize, string? cakeFlavor, string? frostingFlavor, string? dateNeeded,
+        string? cakeSize, string? quantity, string? cakeFlavor, string? frostingFlavor, string? dateNeeded,
         string? specialInstructions)
     {
+        var sizeOrQuantity = !string.IsNullOrEmpty(quantity) ? $"Quantity: {quantity}" : $"Cake Size: {cakeSize ?? "Not specified"}";
         var tokens = new Dictionary<string, string>
         {
             ["name"]                = name                ?? "Not provided",
@@ -86,6 +87,7 @@ public class EmailService : IEmailService
             ["phone"]               = phone               ?? "Not provided",
             ["cakeType"]            = cakeType            ?? "Not specified",
             ["cakeSize"]            = cakeSize            ?? "Not specified",
+            ["quantity"]            = quantity            ?? "Not specified",
             ["cakeFlavor"]          = cakeFlavor          ?? "Not specified",
             ["frostingFlavor"]      = frostingFlavor      ?? "Not specified",
             ["dateNeeded"]          = DateTime.TryParseExact(dateNeeded, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var parsedDate) ? parsedDate.ToString("MMMM dd, yyyy") : "Not specified",
@@ -95,7 +97,7 @@ public class EmailService : IEmailService
         var builder = new BodyBuilder
         {
             HtmlBody = LoadTemplate("OrderNotification.html", tokens),
-            TextBody = $"New Cake Order Request\n\nName: {tokens["name"]}\nEmail: {tokens["email"]}\nPhone: {tokens["phone"]}\n\nCake Type: {tokens["cakeType"]}\nCake Size: {tokens["cakeSize"]}\nCake Flavor: {tokens["cakeFlavor"]}\nFrosting Flavor: {tokens["frostingFlavor"]}\nDate Needed: {tokens["dateNeeded"]}\n\nSpecial Instructions\n--------------------\n{tokens["specialInstructions"]}",
+            TextBody = $"New Cake Order Request\n\nName: {tokens["name"]}\nEmail: {tokens["email"]}\nPhone: {tokens["phone"]}\n\nCake Type: {tokens["cakeType"]}\n{sizeOrQuantity}\nCake Flavor: {tokens["cakeFlavor"]}\nFrosting Flavor: {tokens["frostingFlavor"]}\nDate Needed: {tokens["dateNeeded"]}\n\nSpecial Instructions\n--------------------\n{tokens["specialInstructions"]}",
         };
 
         var message = new MimeMessage();
@@ -109,9 +111,10 @@ public class EmailService : IEmailService
     }
 
     public async Task SendOrderConfirmationEmailAsync(string? name, string? email, string? phone, string? cakeType,
-        string? cakeSize, string? cakeFlavor, string? frostingFlavor, string? dateNeeded,
+        string? cakeSize, string? quantity, string? cakeFlavor, string? frostingFlavor, string? dateNeeded,
         string? specialInstructions)
     {
+        var sizeOrQuantity = !string.IsNullOrEmpty(quantity) ? $"Quantity: {quantity}" : $"Cake Size: {cakeSize ?? "Not specified"}";
         var tokens = new Dictionary<string, string>
         {
             ["name"]                = name                ?? "there",
@@ -119,6 +122,7 @@ public class EmailService : IEmailService
             ["phone"]               = phone               ?? "Not provided",
             ["cakeType"]            = cakeType            ?? "Not specified",
             ["cakeSize"]            = cakeSize            ?? "Not specified",
+            ["quantity"]            = quantity            ?? "Not specified",
             ["cakeFlavor"]          = cakeFlavor          ?? "Not specified",
             ["frostingFlavor"]      = frostingFlavor      ?? "Not specified",
             ["dateNeeded"]          = DateTime.TryParseExact(dateNeeded, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var parsedDate) ? parsedDate.ToString("MMMM dd, yyyy") : "Not specified",
@@ -128,7 +132,7 @@ public class EmailService : IEmailService
         var builder = new BodyBuilder
         {
             HtmlBody = LoadTemplate("OrderConfirmation.html", tokens),
-            TextBody = $"Hi {tokens["name"]},\n\nThank you for your order! We've received your request and will be in touch at our earliest convenience.\n\nOrder Summary\n=============\nCake Type: {tokens["cakeType"]}\nCake Size: {tokens["cakeSize"]}\nCake Flavor: {tokens["cakeFlavor"]}\nFrosting Flavor: {tokens["frostingFlavor"]}\nDate Needed: {tokens["dateNeeded"]}\n\nSpecial Instructions\n--------------------\n{tokens["specialInstructions"]}\n\nJesse's Cakes",
+            TextBody = $"Hi {tokens["name"]},\n\nThank you for your order! We've received your request and will be in touch at our earliest convenience.\n\nOrder Summary\n=============\nCake Type: {tokens["cakeType"]}\n{sizeOrQuantity}\nCake Flavor: {tokens["cakeFlavor"]}\nFrosting Flavor: {tokens["frostingFlavor"]}\nDate Needed: {tokens["dateNeeded"]}\n\nSpecial Instructions\n--------------------\n{tokens["specialInstructions"]}\n\nJesse's Cakes",
         };
 
         var message = new MimeMessage();

@@ -33,6 +33,7 @@ public class OrdersController : ControllerBase
                 Phone = request.Phone,
                 CakeType = request.CakeType,
                 CakeSize = request.CakeSize,
+                Quantity = request.Quantity,
                 CakeFlavor = request.CakeFlavor,
                 FrostingFlavor = request.FrostingFlavor,
                 DateNeeded = request.DateNeeded,
@@ -41,12 +42,12 @@ public class OrdersController : ControllerBase
 
             await _emailService.SendOrderEmailAsync(
                 request.Name, request.Email, request.Phone,
-                request.CakeType, request.CakeSize, request.CakeFlavor,
+                request.CakeType, request.CakeSize, request.Quantity, request.CakeFlavor,
                 request.FrostingFlavor, request.DateNeeded, request.SpecialInstructions);
 
             await _emailService.SendOrderConfirmationEmailAsync(
                 request.Name, request.Email, request.Phone,
-                request.CakeType, request.CakeSize, request.CakeFlavor,
+                request.CakeType, request.CakeSize, request.Quantity, request.CakeFlavor,
                 request.FrostingFlavor, request.DateNeeded, request.SpecialInstructions);
 
             return Ok();

@@ -6,6 +6,7 @@ export interface OrderRequest {
     phone: string;
     cakeType: string;
     cakeSize: string;
+    quantity: string;
     cakeFlavor: string;
     frostingFlavor: string;
     dateNeeded: string;

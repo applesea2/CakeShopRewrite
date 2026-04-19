@@ -22,9 +22,11 @@ public record OrderRequest : IValidatableObject
     [MaxLength(50, ErrorMessage = "Cake type cannot exceed 50 characters.")]
     public string? CakeType { get; init; }
 
-    [Required(ErrorMessage = "Cake size is required.")]
     [MaxLength(50, ErrorMessage = "Cake size cannot exceed 50 characters.")]
     public string? CakeSize { get; init; }
+
+    [MaxLength(50, ErrorMessage = "Quantity cannot exceed 50 characters.")]
+    public string? Quantity { get; init; }
 
     [Required(ErrorMessage = "Cake flavor is required.")]
     [MaxLength(50, ErrorMessage = "Cake flavor cannot exceed 50 characters.")]

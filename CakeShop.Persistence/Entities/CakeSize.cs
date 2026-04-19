@@ -6,4 +6,6 @@ public class CakeSize
     public string Name { get; set; } = string.Empty;
     public int DisplayOrder { get; set; }
     public bool IsActive { get; set; } = true;
+
+    public ICollection<ItemType> ItemTypes { get; set; } = new List<ItemType>();
 }

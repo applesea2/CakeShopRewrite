@@ -33,6 +33,7 @@ export default function OrderPage() {
     const [cakeSize, setCakeSize] = useState('');
     const [selectedCakeId, setSelectedCakeId] = useState<number | null>(null);
     const [frostingFlavor, setFrostingFlavor] = useState('');
+    const [quantity, setQuantity] = useState('');
     const [dateNeeded, setDateNeeded] = useState('');
     const [specialInstructions, setSpecialInstructions] = useState('');
     const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -51,6 +52,12 @@ export default function OrderPage() {
     );
 
     const showFrosting = useMemo(() => cakeType === 'Celebration Cakes', [cakeType]);
+    const availableSizes = useMemo(
+        () => selectedCake ? cakeSizes.filter(s => s.itemTypeIds.includes(selectedCake.itemTypeId)) : [],
+        [cakeSizes, selectedCake]
+    );
+    const showSize = useMemo(() => availableSizes.length > 0, [availableSizes]);
+    const showQuantity = useMemo(() => showSize && !!selectedCake?.isQuantityBased, [showSize, selectedCake]);
 
     const resetForm = () => {
         setName('');
@@ -60,6 +67,7 @@ export default function OrderPage() {
         setCakeSize('');
         setSelectedCakeId(null);
         setFrostingFlavor('');
+        setQuantity('');
         setDateNeeded('');
         setSpecialInstructions('');
         setErrors({});
@@ -82,7 +90,8 @@ export default function OrderPage() {
         if (!email.trim() || !isValidEmail(email)) newErrors.email = 'Valid email is required.';
         if (!phone.trim() || !isValidPhone(phone)) newErrors.phone = 'Valid phone number is required.';
         if (!selectedCakeId) newErrors.selectedCakeId = 'Please select a cake.';
-        if (!cakeSize) newErrors.cakeSize = 'Please select a size.';
+        if (showSize && !showQuantity && !cakeSize) newErrors.cakeSize = 'Please select a size.';
+        if (showQuantity && !quantity) newErrors.quantity = 'Please select a quantity.';
         if (showFrosting && !frostingFlavor) newErrors.frostingFlavor = 'Please select a frosting.';
         if (!dateNeeded) newErrors.dateNeeded = 'Please select a date.';
         else if (dateNeeded < minDate) newErrors.dateNeeded = 'Please select a date at least 3 days from today.';
@@ -120,10 +129,14 @@ export default function OrderPage() {
     const onCakeSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = parseInt(e.target.value);
         setSelectedCakeId(value);
+        setCakeSize('');
+        setQuantity('');
         const item = menuItems.find(m => m.id === value);
         if (item) setCakeType(item.category);
         clearError('selectedCakeId');
         clearError('cakeType');
+        clearError('cakeSize');
+        clearError('quantity');
     };
 
     const onSubmit = async (e: React.FormEvent) => {
@@ -138,7 +151,9 @@ export default function OrderPage() {
 
         try {
             await sendOrderRequest({
-                name, email, phone, cakeType, cakeSize,
+                name, email, phone, cakeType,
+                cakeSize: showQuantity ? '' : cakeSize,
+                quantity: showQuantity ? quantity : '',
                 cakeFlavor: selectedCake?.title || '',
                 frostingFlavor, dateNeeded, specialInstructions,
             });
@@ -244,19 +259,28 @@ export default function OrderPage() {
                             </div>
                         )}
                     </div>
-                    <div className={styles.fieldGroup}>
-                        <label htmlFor="cakeSize" className={styles.label}>Cake Size</label>
-                        <select
-                            id="cakeSize"
-                            className={`${styles.select} ${errors.cakeSize ? styles.inputError : ''}`}
-                            value={cakeSize}
-                            onChange={e => { setCakeSize(e.target.value); clearError('cakeSize'); }}
-                            disabled={loading}>
-                            <option value="">{loading ? 'Loading…' : 'Select size…'}</option>
-                            {cakeSizes.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
-                        </select>
-                        {errors.cakeSize && <p className={styles.fieldError}>{errors.cakeSize}</p>}
-                    </div>
+                    {showSize && (
+                        <div className={styles.fieldGroup}>
+                            <label htmlFor="sizeOrQuantity" className={styles.label}>
+                                {showQuantity ? 'Quantity' : 'Cake Size'}
+                            </label>
+                            <select
+                                id="sizeOrQuantity"
+                                className={`${styles.select} ${(errors.cakeSize || errors.quantity) ? styles.inputError : ''}`}
+                                value={showQuantity ? quantity : cakeSize}
+                                onChange={e => {
+                                    if (showQuantity) { setQuantity(e.target.value); clearError('quantity'); }
+                                    else { setCakeSize(e.target.value); clearError('cakeSize'); }
+                                }}
+                                disabled={loading}>
+                                <option value="">{loading ? 'Loading…' : showQuantity ? 'Select quantity…' : 'Select size…'}</option>
+                                {availableSizes.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+                            </select>
+                            {(errors.cakeSize || errors.quantity) && (
+                                <p className={styles.fieldError}>{errors.cakeSize || errors.quantity}</p>
+                            )}
+                        </div>
+                    )}
                     {showFrosting && (
                         <div className={styles.fieldGroup}>
                             <label htmlFor="frostingFlavor" className={styles.label}>Frosting</label>

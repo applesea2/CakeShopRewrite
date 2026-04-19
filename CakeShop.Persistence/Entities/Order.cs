@@ -8,6 +8,7 @@ public class Order
     public string Phone { get; set; } = string.Empty;
     public string CakeType { get; set; } = string.Empty;
     public string CakeSize { get; set; } = string.Empty;
+    public string? Quantity { get; set; }
     public string CakeFlavor { get; set; } = string.Empty;
     public string FrostingFlavor { get; set; } = string.Empty;
     public string DateNeeded { get; set; } = string.Empty;

@@ -23,7 +23,8 @@ public class MenuService : IMenuService
                 Description = x.Description,
                 ItemTypeId = x.ItemTypeId,
                 Category = x.ItemType.Name,
-                Price = x.Price
+                Price = x.Price,
+                IsQuantityBased = x.ItemType.IsQuantityBased
             })
             .ToList();
     }
@@ -32,7 +33,7 @@ public class MenuService : IMenuService
     {
         var item = _menuRepository.GetItemById(id);
         if (item is null) return null;
-    
+
         return new MenuItemDto
         {
             Id = item.Id,
@@ -40,7 +41,8 @@ public class MenuService : IMenuService
             Description = item.Description,
             ItemTypeId = item.ItemTypeId,
             Category = item.ItemType.Name,
-            Price = item.Price
+            Price = item.Price,
+            IsQuantityBased = item.ItemType.IsQuantityBased
         };
     }
 }
