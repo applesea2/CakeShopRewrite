@@ -66,13 +66,11 @@
 
 /* ── Story Section ── */
 .story {
-    max-width: 780px;
+    max-width: 680px;
     margin: 0 auto;
     padding: 4rem 2rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
 }
 
 .sectionTag {
@@ -85,17 +83,11 @@
 
 .sectionTitle {
     font-family: 'Playfair Display', serif;
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 600;
     color: #3D2B1F;
-    line-height: 1.2;
+    line-height: 1.25;
     margin: 0 0 1.5rem;
-}
-
-.sectionTitle em {
-    font-style: italic;
-    font-weight: 400;
-    color: #9C7A5E;
 }
 
 .storyText {
@@ -103,7 +95,6 @@
     line-height: 1.8;
     color: #5C4A3A;
     font-weight: 300;
-    max-width: 620px;
 }
 
 .storyText + .storyText {
@@ -124,22 +115,19 @@
 }
 
 .valueCard {
-    background: #FFFFFF;
-    border-radius: 12px;
-    padding: 2.25rem 2rem;
-    box-shadow: 0 2px 16px rgba(61, 43, 31, 0.07);
-    text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.valueCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 24px rgba(61, 43, 31, 0.12);
+    background: transparent;
+    border-left: 3px solid #D4B896;
+    padding: 1.5rem 1.75rem;
+    text-align: left;
 }
 
 .valueIcon {
-    font-size: 36px;
-    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 400;
+    color: #D4B896;
+    line-height: 1;
+    margin-bottom: 0.75rem;
 }
 
 .valueTitle {
@@ -170,12 +158,6 @@
     font-weight: 600;
     color: #FAF6F0;
     margin: 0 0 1rem;
-}
-
-.promiseTitle em {
-    font-style: italic;
-    font-weight: 400;
-    color: #D4B896;
 }
 
 .promiseText {

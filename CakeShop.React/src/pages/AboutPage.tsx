@@ -8,14 +8,13 @@ export default function AboutPage() {
             <section className={styles.hero}>
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
-                    <p className={styles.eyebrow}>Our Story</p>
+                    <p className={styles.eyebrow}>About</p>
                     <h1 className={styles.heroTitle}>
                         Baked from the <em>Heart</em>
                     </h1>
                     <p className={styles.heroSub}>
-                        Every cake that leaves our kitchen carries a piece of who we are — a
-                        passion for craft, a love for flavour, and a promise to make your
-                        moments sweeter.
+                        Everything made from scratch, at home, because that's the only way
+                        I know how to do it.
                     </p>
                 </div>
             </section>
@@ -23,28 +22,24 @@ export default function AboutPage() {
             {/* ── Story Section ── */}
             <section className={styles.story}>
                 <p className={styles.sectionTag}>Meet Jesse</p>
-                <h2 className={styles.sectionTitle}>
-                    A Kitchen Dream Turned <em>Reality</em>
-                </h2>
+                <h2 className={styles.sectionTitle}>I've been baking since I was a kid.</h2>
                 <p className={styles.storyText}>
-                    It all started in a tiny home kitchen with a hand-me-down mixer and a
-                    recipe scribbled on the back of an envelope. What began as weekend
-                    experiments for family birthdays quickly became a calling. Friends
-                    asked for more, neighbours knocked on the door, and before long baking
-                    wasn't just a hobby — it was a way of life.
+                    Not trained, not certified — just someone who grew up in the kitchen
+                    and never really stopped. It started with simple stuff: birthday cakes
+                    for family, batches of cookies that didn't always turn out right. Over
+                    the years I got better, and eventually people started asking if I'd
+                    bake for them too.
                 </p>
                 <p className={styles.storyText}>
-                    Today, Jesse's Cakes is built on that same foundation: real butter,
-                    fresh eggs, quality chocolate, and an uncompromising attention to
-                    detail. Every layer is mixed by hand, every decoration placed with
-                    care. No shortcuts, no preservatives — just honest, homemade cake the
-                    way it should be.
+                    Everything I make is from scratch, in my home kitchen. No box mixes,
+                    no shortcuts, no commercial kitchen. Real butter, real eggs, and
+                    recipes I've actually put time into. I care a lot more about how
+                    something tastes than how it looks on Instagram.
                 </p>
                 <p className={styles.storyText}>
-                    Whether it's a towering wedding centrepiece or a simple vanilla sponge
-                    for a Sunday afternoon, we pour the same love into every single bake.
-                    Because you deserve a cake that tastes as special as the moment it
-                    celebrates.
+                    I mostly bake for people I know — friends, family, the occasional
+                    friend-of-a-friend. If you want something delicious and made with
+                    actual care, I'd love to bake for you.
                 </p>
             </section>
 
@@ -52,27 +47,27 @@ export default function AboutPage() {
             <section className={styles.values}>
                 <div className={styles.valuesGrid}>
                     <div className={styles.valueCard}>
-                        <div className={styles.valueIcon}>🧈</div>
-                        <h3 className={styles.valueTitle}>Premium Ingredients</h3>
+                        <div className={styles.valueIcon}>01</div>
+                        <h3 className={styles.valueTitle}>Scratch, always</h3>
                         <p className={styles.valueDesc}>
-                            We source the finest butter, flour, and seasonal fruits so every
-                            bite is rich, fresh, and unforgettable.
+                            No box mixes, no pre-made fillings. Everything — batter, frosting,
+                            fillings — is made from scratch every single time.
                         </p>
                     </div>
                     <div className={styles.valueCard}>
-                        <div className={styles.valueIcon}>🎂</div>
-                        <h3 className={styles.valueTitle}>Handcrafted with Care</h3>
+                        <div className={styles.valueIcon}>02</div>
+                        <h3 className={styles.valueTitle}>Flavour first</h3>
                         <p className={styles.valueDesc}>
-                            No factory lines here. Each cake is baked, filled, and decorated
-                            entirely by hand — one order at a time.
+                            I'm not a cake decorator. I'm someone who genuinely loves baking
+                            and wants every bite to be worth it.
                         </p>
                     </div>
                     <div className={styles.valueCard}>
-                        <div className={styles.valueIcon}>💛</div>
-                        <h3 className={styles.valueTitle}>Made for Your Moments</h3>
+                        <div className={styles.valueIcon}>03</div>
+                        <h3 className={styles.valueTitle}>Made for people I know</h3>
                         <p className={styles.valueDesc}>
-                            Birthdays, weddings, or just because — we create cakes that turn
-                            everyday occasions into lasting memories.
+                            I bake for friends, family, and people they send my way. Every
+                            order gets the same care I'd put into something for my own table.
                         </p>
                     </div>
                 </div>
@@ -80,15 +75,13 @@ export default function AboutPage() {
 
             {/* ── Promise / CTA ── */}
             <section className={styles.promise}>
-                <h2 className={styles.promiseTitle}>
-                    Ready to Taste the <em>Difference</em>?
-                </h2>
+                <h2 className={styles.promiseTitle}>Want something made properly?</h2>
                 <p className={styles.promiseText}>
-                    Life is too short for ordinary cake. Let us craft something
-                    extraordinary for your next celebration.
+                    If you want a cake made from scratch, by someone who actually loves
+                    baking — I'd be happy to make it for you.
                 </p>
                 <Link to="/order" className={styles.ctaBtn}>
-                    Order Now
+                    Get in touch
                 </Link>
             </section>
         </div>
