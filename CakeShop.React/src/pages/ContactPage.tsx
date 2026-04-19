@@ -101,7 +101,7 @@ export default function ContactPage() {
         <div className={styles.page}>
             <div className={styles.header}>
                 <p className={styles.eyebrow}>Get in Touch</p>
-                <h1 className={styles.title}>Contact <em>Us</em></h1>
+                <h1 className={styles.title}>Contact Us</h1>
                 <p className={styles.subtitle}>
                     We'd love to hear from you — whether it's a custom cake order, a question, or just to say hello.
                 </p>

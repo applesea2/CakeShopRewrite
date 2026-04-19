@@ -174,7 +174,7 @@ export default function OrderPage() {
         <div className={styles.page}>
             <div className={styles.header}>
                 <p className={styles.eyebrow}>Place Your Order</p>
-                <h1 className={styles.title}>Custom <em>Cake Order</em></h1>
+                <h1 className={styles.title}>Custom Cake Order</h1>
                 <p className={styles.subtitle}>
                     Tell us about your dream cake and we'll make it a reality — handmade with love, just for you.
                 </p>

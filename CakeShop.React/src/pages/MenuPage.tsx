@@ -67,7 +67,7 @@ export default function MenuPage(){
     return (
         <main className={styles.page}>
             <div className={styles.header}>
-                <h1 className={styles.title}>Our <em>Menu</em></h1>
+                <h1 className={styles.title}>Our Menu</h1>
             </div>
             <div className={styles.columns}>
                 <div>{leftCol.map(renderCategory)}</div>
